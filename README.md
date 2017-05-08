@@ -3,6 +3,9 @@
 > 支持 协作的 脑图 
 > 
 
+
+# 非常感谢  KityMinder + jQueryGantt 
+
 ## 简要说明
 首先确保 meteor 已经安装完成 
 
@@ -18,3 +21,5 @@ meteorhacks:picker
 session
 
 ```
+
+新增加 甘特图切换

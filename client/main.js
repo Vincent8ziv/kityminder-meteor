@@ -1,18 +1,18 @@
-// import angular from 'angular';
+// // import angular from 'angular';
 import angularMeteor from 'angular-meteor';
-// 默认首页使用 测试脑图
+// // 默认首页使用 测试脑图
 Router.route('/', function () {
 	// 设置默认的测试脑图 mindx 这
 	Session.set('filename', 'mindx');
 	console.log("index");
 },{where:'client'});
-// 根据不同的文件名打开对应的脑图
+// // 根据不同的文件名打开对应的脑图
 Router.route('/:filename', function () {
 	console.log("mindx file");
 	Session.set("filename", this.params.filename);
 },{where:'client'});
 
-console.log("client init");
+// console.log("client init");
 
 angular.module('kityminderDemo', ['kityminderEditor',angularMeteor])
 	.config(function (configProvider) {
@@ -23,28 +23,27 @@ angular.module('kityminderDemo', ['kityminderEditor',angularMeteor])
 
 		console.log("MainController init here");
 		console.log(Session.get('filename'));
-		$scope.showinfo = false;
-		$scope.createfilestatus = false;
-		$scope.inputfilename = false;
 		// 创建新文件的判断逻辑
-		$scope.newfile = function () {
-			if ($scope.newfilename == undefined) {
+		$scope.newfile = function (filename) {
+			if (filename == "") {
 				console.log("newfilename is empty");
-				$scope.inputfilename = true;
+				showdia('fempty');
 				return;
 			}
-			newfilestatus = Minderjs.findOne({ "mid": $scope.newfilename });
-			console.log($scope.newfilename);
+			newfilestatus = Minderjs.findOne({ "mid": filename});
+			console.log(filename);
+			$scope.newfilename = filename;
 			// 判断文件是否已经存在
 			if (newfilestatus) {
 				console.log("file exist");
-				$scope.showinfo = true;
+				showdia('fexist');
 			} else {
-				$scope.createfilestatus = true;
+				showdia('fcreate');
 				console.log("can create file");
 				// 根据文件名创建新的脑图
-				Meteor.call('insertmind', $scope.newfilename);
+				Meteor.call('insertmind', filename);
 			}
+
 		};
 		// 根据当前的脑图文件名打开指定的脑图
 		mind = Minderjs.find({ "mid": Session.get('filename') });
@@ -95,7 +94,6 @@ angular.module('kityminderDemo', ['kityminderEditor',angularMeteor])
 				if ($scope.patchlock) {
 					return;
 				}
-
 				$scope.jscode = editor.minder.exportJson();
 				opjs = window.diff($scope.oldjs, $scope.jscode);
 				// 比较下本地的变化，不知道为啥一个本地操作这里发起2次调用，暂时还没搞懂，所以用这种方式判断下
